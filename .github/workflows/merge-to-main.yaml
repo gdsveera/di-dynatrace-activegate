@@ -8,7 +8,7 @@ name: Publish Stack Set to Service Catalog
 on:
   push:
     branches:
-      - main
+      - vf/plat-1529
   workflow_dispatch:
 
 jobs:
