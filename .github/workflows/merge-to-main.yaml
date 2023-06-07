@@ -71,7 +71,7 @@ jobs:
           aws cloudformation create-stack-set --stack-set-name di-devplat-obv-dynatrace-iam-v0.0.0 \
           --template-body file://cdk.out/DynatraceMonitoringRoleStack.template.json \
           --description 'Stack set that grants Dynatrace permission to pull metrics' \
-          --capabilities CAPABILITY_IAM,CAPABILITY_NAMED_IAM \
+          --capabilities CAPABILITY_IAM, CAPABILITY_NAMED_IAM \
           --administration-role-arn arn:aws:iam::684469894301:role/AWSCloudFormationStackSetAdministrationRole \
           --execution-role-name AWSCloudFormationStackSetExecutionRole \
           --tags Key=Product,Value='GOV.UK Sign In' Key=System,Value=Observability Key=Environment,Value=production \
