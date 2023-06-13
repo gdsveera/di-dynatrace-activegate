@@ -6,9 +6,16 @@ name: Publish Stack Set to Service Catalog
 # Service Catalog Stack Set. 
 
 on:
-  release:
-    types: [published]
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to run against'
+        type: environment
+        required: true  
+# on:
+#   release:
+#     types: [published]
+#   workflow_dispatch:
 
 jobs:
   context:
@@ -85,13 +92,13 @@ jobs:
         with:
           role-to-assume: ${{ secrets.DT_GH_ACTIONS_ROLE_ARN }}
           aws-region: eu-west-2
-      - name: Delete previous stackset
-        run: |
-          previous=$(aws cloudformation list-stack-sets --status ACTIVE --query "Summaries[*].StackSetName" | \
-          grep di-devplat-obv-dynatrace-iam | sed -e 's/^[ \t]*//' | tr -d '"')
-          aws cloudformation delete-stack-set --stack-set-name $previous
-        env:
-          AWS_DEFAULT_REGION: eu-west-2
+      # - name: Delete previous stackset
+      #   run: |
+      #     previous=$(aws cloudformation list-stack-sets --status ACTIVE --query "Summaries[*].StackSetName" | \
+      #     grep di-devplat-obv-dynatrace-iam | sed -e 's/^[ \t]*//' | tr -d '"')
+      #     aws cloudformation delete-stack-set --stack-set-name $previous
+      #   env:
+      #     AWS_DEFAULT_REGION: eu-west-2
       - name: Apply
         run: |
           aws cloudformation create-stack-set --stack-set-name di-devplat-obv-dynatrace-iam-${{ steps.hyphenate-version.outputs.release }} \
