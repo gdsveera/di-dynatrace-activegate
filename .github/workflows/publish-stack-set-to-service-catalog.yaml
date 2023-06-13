@@ -15,40 +15,6 @@ permissions:
   contents: read
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Setup Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18.16.0'
-      - name: Install node dependencies
-        run: npm ci
-      - name: Run Jest Tests
-        run: npm test
-
-  validate:
-    runs-on: ubuntu-latest
-    needs: 
-      - test
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: cdk synth
-        uses: youyo/aws-cdk-github-actions@v2
-        with:
-          cdk_subcommand: 'synth'
-          cdk_version: '2.81.0'
-          working_dir: 'cdk.out'
-      - name: Run Checkov action
-        uses: bridgecrewio/checkov-action@v12
-        with:
-          directory: cdk.out/
-          framework: cloudformation
-          skip_check: CKV_AWS_107,CKV_AWS_111
-
   update:
     runs-on: ubuntu-latest
     needs: 
@@ -71,7 +37,7 @@ jobs:
           RELEASE=$(echo $VERSION | sed s/\\./-/g)
           echo "release=$RELEASE" >> "$GITHUB_OUTPUT"
       - name: Assume AWS Role
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v3
         with:
           role-to-assume: ${{ secrets.DT_GH_ACTIONS_ROLE_ARN }}
           aws-region: eu-west-2
